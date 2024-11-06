@@ -29,7 +29,10 @@ jobs:
           npm run e2e
       - name: Build
         run: npm run build
+  dequeued:
+    runs-on: ubuntu-latest
+    if: ${{github.event.pull_request == dequeued}}
+    steps:
       # Echo canceled
       - name: Cancelled Job
-        if: ${{ cancelled() }}
         run: echo cancelled job!!
