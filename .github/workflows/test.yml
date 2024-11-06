@@ -39,7 +39,7 @@ jobs:
         run: npm run build
   dequeued:
     runs-on: ubuntu-latest
-    if: ${{github.event.pull_request == dequeued}}
+    if: ${{github.event.pull_request.dequeued}}
     steps:
       # Echo canceled
       - name: Cancelled Job
