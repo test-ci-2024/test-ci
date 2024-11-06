@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: testing
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -35,3 +37,7 @@ jobs:
 
       - name: Build
         run: npm run build
+      # Echo canceled
+      - name: Cancelled Job
+        if: ${{ cancelled() }}
+        run: echo cancelled job!!
