@@ -29,3 +29,7 @@ jobs:
           npm run e2e
       - name: Build
         run: npm run build
+      # Echo canceled
+      - name: Canceled Job
+        if: ${{ canceled() }}
+        run: echo canceled job!!
