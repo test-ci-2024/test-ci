@@ -9,6 +9,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: softprops/turnstyle@v2
+      - uses: softprops/turnstyle@v2.2.3
       - name: Deploy
         run: sleep 40
