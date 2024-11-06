@@ -30,6 +30,6 @@ jobs:
       - name: Build
         run: npm run build
       # Echo canceled
-      - name: Canceled Job
-        if: ${{ canceled() }}
-        run: echo canceled job!!
+      - name: Cancelled Job
+        if: ${{ cancelled() }}
+        run: echo cancelled job!!
