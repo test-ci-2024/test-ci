@@ -12,4 +12,4 @@ jobs:
       - name: TurnStyle
         uses: softprops/turnstyle@v2
       - name: Deploy
-        run: sleep 30
+        run: sleep 50
