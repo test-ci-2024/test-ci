@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: testing
     steps:
       # Checkout the repository
       - name: Checkout repository
