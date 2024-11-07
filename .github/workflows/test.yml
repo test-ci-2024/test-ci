@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: ahmadnassri/action-workflow-queue@v1
+      - name: Turnstyle
+        uses: softprops/turnstyle@v2
+        with:
+          same-branch-only: false
       - name: Deploy
         run: sleep 40
