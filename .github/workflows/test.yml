@@ -20,17 +20,17 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: npm install
+      
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       # Wait for previous job to finish
       - name: Turnstyle
         uses: softprops/turnstyle@v2
         with:
           same-branch-only: false
-      
-      # Install Playwright browsers
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-      
+
       # Run e2e test
       - name: Run Playwright tests
         run: npx run e2e
