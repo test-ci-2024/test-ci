@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
-          name: report
+          name: report-${{ github.ref_name }}
           path: ./e2e/temp/test-results
