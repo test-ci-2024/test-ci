@@ -33,7 +33,7 @@ jobs:
 
       # Run e2e test
       - name: Run Playwright tests
-        run: npx run e2e
+        run: npm run e2e
       
       # Upload test report on failure
       - name: Upload report on failure
