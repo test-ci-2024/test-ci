@@ -7,5 +7,5 @@ test('get started link', async ({ page }) => {
   console.log(testEnv.ci);
 
   // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: '1 Hello 1, test-ci' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Hello 1, test-ci' })).toBeVisible();
 });
