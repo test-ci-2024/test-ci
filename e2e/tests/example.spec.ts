@@ -4,7 +4,7 @@ import { testEnv } from 'e2e/enviroments/enviroment';
 test('get started link', async ({ page }) => {
   await page.goto('/');
 
-  console.log(testEnv.ci);
+  console.log("CI:", testEnv.ci);
 
   // Expects page to have a heading with the name of Installation.
   await expect(page.getByRole('heading', { name: 'Hello 1, test-ci' })).toBeVisible();
