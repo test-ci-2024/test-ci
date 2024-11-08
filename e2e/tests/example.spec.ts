@@ -4,8 +4,10 @@ import { testEnv } from 'e2e/enviroments/enviroment';
 test('get started link', async ({ page }) => {
   await page.goto('/');
 
-  console.log(testEnv.ci);
+  console.log("CI:", testEnv.ci);
 
+  const name = 'Hello 1, test-ci'
+  console.log("name:", name)
   // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: '1 Hello 1, test-ci' })).toBeVisible();
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
 });
