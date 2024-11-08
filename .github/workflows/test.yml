@@ -5,6 +5,7 @@ on:
       - develop
 jobs:
   build:
+    name: playwright
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository
@@ -15,15 +16,32 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.17'
+            node-version: '20.17'
 
       # Install dependencies
       - name: Install dependencies
         run: npm install
-      # Run test
-      - name: Run tests
-        run: |
-          npx playwright install --with-deps
-          npm run e2e
-      - name: Build
-        run: npm run build
+
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Wait for previous job to finish
+      - name: Turnstyle
+        uses: softprops/turnstyle@v2
+        with:
+          same-branch-only: false
+
+      # Run e2e test
+      - name: Run Playwright tests
+        run: npm run e2e
+        env:
+          ENV: "PROD"
+      
+      # Upload test report on failure
+      - name: Upload report on failure
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: report-${{ github.sha }}
+          path: ./e2e/temp/test-report
