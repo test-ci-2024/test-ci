@@ -79,5 +79,6 @@ export default defineConfig({
     command: 'npm run start',
     url: 'http://localhost:4200',
     reuseExistingServer: !testEnv.ci,
+    timeout: testEnv.ci ? 120 * 1000 : 60 * 1000 // Default is 60.000 -> 60 sec
   },
 });
