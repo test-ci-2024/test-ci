@@ -35,6 +35,8 @@ jobs:
       # Run e2e test
       - name: Run Playwright tests
         run: npm run e2e
+        env:
+          ENV: "Hola mundo"
       
       # Upload test report on failure
       - name: Upload report on failure
