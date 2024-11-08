@@ -5,6 +5,7 @@ on:
       - develop
 jobs:
   main:
+    name: playwright
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository
@@ -41,4 +42,4 @@ jobs:
         if: ${{ failure() }}
         with:
           name: report-${{ github.sha }}
-          path: ./e2e/temp/test-results
+          path: ./e2e/temp/test-report
