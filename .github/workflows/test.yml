@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: playwright
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -22,17 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Install libraries
-      - name: Install libraries
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-0
-
       # Install Playwright browsers
       - name: Install Playwright browsers
         run: |
           npx playwright install --with-deps
-          ~/.cache/ms-playwright/webkit-2083/minibrowser-gtk/bin/MiniBrowser
 
 
       # Wait for previous job to finish
