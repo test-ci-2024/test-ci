@@ -24,7 +24,10 @@ jobs:
 
       # Install Playwright browsers
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: |
+          npx playwright install --with-deps
+          ~/.cache/ms-playwright/webkit-2083/minibrowser-gtk/bin/MiniBrowser
+
 
       # Wait for previous job to finish
       - name: Turnstyle
