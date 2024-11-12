@@ -47,5 +47,5 @@ node_modules/
 /playwright/.cache/
 
 e2e/temp/*
-
+e2e/reports/*
 e2e/.env

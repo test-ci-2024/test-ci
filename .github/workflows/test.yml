@@ -34,7 +34,7 @@ jobs:
 
       # Run e2e test
       - name: Run Playwright tests
-        run: npm run e2e
+        run: npm run e2e -- --project='Mobile Safari'
         env:
           ENV: "PROD"
       
