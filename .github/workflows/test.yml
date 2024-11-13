@@ -26,8 +26,7 @@ jobs:
       - name: Install Playwright browsers
         run: |
           npx playwright install --with-deps
-          ls ~/.cache/ms-playwright/webkit-2083/
-          ~/.cache/ms-playwright/webkit-2083/pw_run.sh
+          # ls ~/.cache/ms-playwright/webkit-2083/
 
 
       # Wait for previous job to finish
@@ -38,7 +37,7 @@ jobs:
 
       # Run e2e test
       - name: Run Playwright tests
-        run: npm run e2e -- --project='Mobile Safari'
+        run: npm run e2e
         env:
           ENV: "PROD"
       
