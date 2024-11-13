@@ -18,6 +18,11 @@ jobs:
         with:
             node-version: '20.17'
 
+      - name: SO version
+        run: |
+          lsb_release -a
+          uname -m
+
       # Install dependencies
       - name: Install dependencies
         run: npm install
