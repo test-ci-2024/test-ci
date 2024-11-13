@@ -25,6 +25,7 @@ jobs:
       # Install Playwright browsers
       - name: Install Playwright browsers
         run: |
+          npx playwright uninstall
           npx playwright install --with-deps
           # ls ~/.cache/ms-playwright/webkit-2083/
 
