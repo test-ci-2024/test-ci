@@ -15,7 +15,9 @@ test('flaky test', async ({ page }, testInfo) => {
   await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
 });
 
-test('browser', async ({page}) => {
+test('browser', {
+  tag: '@c-essential'
+} ,async ({page}) => {
   test.setTimeout(50 * 1000);
   await page.goto('https://workspace-workspace.haulmer.dev');
   await page.getByLabel('Email').fill('usuario_test01@haulmer.net');
