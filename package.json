@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "e2e": "npx playwright test",
-    "e2e:ui": "npx playwright test --ui"
+    "e2e:ui": "npx playwright test --ui",
+    "e2e:report": "npx playwright show-report ./e2e/temp/test-report"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +30,7 @@
     "@angular-devkit/build-angular": "^18.2.10",
     "@angular/cli": "^18.2.10",
     "@angular/compiler-cli": "^18.2.0",
-    "@playwright/test": "^1.48.2",
+    "@playwright/test": "1.46",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^22.8.7",
     "jasmine-core": "~5.2.0",

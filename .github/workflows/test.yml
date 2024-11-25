@@ -1,15 +1,17 @@
 name: testing
 on:
-  push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - develop
+  workflow_dispatch:
+    inputs:
+      essentials:
+        descriptcion: 'test @c-essential'
+        type: boolean
+      
 jobs:
   build:
     name: playwright
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.46.0-noble
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -27,7 +29,9 @@ jobs:
 
       # Install Playwright browsers
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: |
+          npx playwright install --with-deps
+          # ls ~/.cache/ms-playwright/webkit-2083/
 
       # Wait for previous job to finish
       - name: Turnstyle
@@ -37,9 +41,19 @@ jobs:
 
       # Run e2e test
       - name: Run Playwright tests
+        if: ${{ !inputs.essentials }}
         run: npm run e2e
         env:
           ENV: "PROD"
+          DEBUG: "pw:api"
+      
+      # Run e2e test
+      - name: Run Playwright tests c-essential
+        if: ${{ inputs.essentials }}
+        run: npm run e2e -- --grep @c-essential
+        env:
+          ENV: "PROD"
+          DEBUG: "pw:api"
       
       # Upload test report on failure
       - name: Upload report on failure
