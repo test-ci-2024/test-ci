@@ -7,6 +7,8 @@ jobs:
   build:
     name: playwright
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.46.0-noble
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -27,7 +29,6 @@ jobs:
         run: |
           npx playwright install --with-deps
           # ls ~/.cache/ms-playwright/webkit-2083/
-
 
       # Wait for previous job to finish
       - name: Turnstyle
