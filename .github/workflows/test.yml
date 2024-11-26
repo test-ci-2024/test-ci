@@ -62,10 +62,13 @@ jobs:
         with:
           same-branch-only: false
 
+      # Get selected inputs
+      - id: get-selected-step
+        uses: joao-zanutto/get-selected@v1.1.1
+
       # Run e2e test
       - name: Run Playwright tests
-        uses: joao-zanutto/get-selected@v1.1.1
-        if: ${{ !inputs.essentials }}
+        if: ${{ !inputs.all }}
         run: npm run e2e -- ${{ steps.get-selected-step.outputs.selected }}
         env:
           ENV: "PROD"
