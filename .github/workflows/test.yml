@@ -1,13 +1,10 @@
 name: testing e2e
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #     essentials:
-  #       description: 'test @c-essential'
-  #       type: boolean
-  pull_request: 
-    branches:
-      develop
+  workflow_dispatch:
+    inputs:
+      essentials:
+        description: 'test @c-essential'
+        type: boolean
 
 jobs:
   initial:
