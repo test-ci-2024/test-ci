@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Status block
         run: gh api repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
+        env:
+          GH_TOKEN: ${{ github.token }}
   build:
     name: playwright
     runs-on: ubuntu-latest
@@ -43,7 +45,7 @@ jobs:
         uses: softprops/turnstyle@v2
         with:
           same-branch-only: false
-          
+
       # Run e2e test
       - name: Run Playwright tests
         if: ${{ !inputs.essentials }}
