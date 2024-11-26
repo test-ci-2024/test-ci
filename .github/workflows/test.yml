@@ -74,7 +74,7 @@ jobs:
       # Run e2e test
       - name: Run Playwright tests
         if: ${{ !inputs.all }}
-        run: npm run e2e -- --grep --% "${{ steps.get-selected-step.outputs.selected }}"
+        run: npm run e2e -- --grep "${{ steps.get-selected-step.outputs.selected }}"
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
