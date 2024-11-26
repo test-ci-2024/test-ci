@@ -65,19 +65,21 @@ jobs:
       # Get selected inputs
       - id: get-selected-step
         uses: joao-zanutto/get-selected@v1.1.1
+        with:
+          separator: "|"
 
       # Run e2e test
       - name: Run Playwright tests
         if: ${{ !inputs.all }}
-        run: npm run e2e -- ${{ steps.get-selected-step.outputs.selected }}
+        run: npm run e2e -- --grep --% "${{ steps.get-selected-step.outputs.selected }}"
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
       
       # Run e2e test
       - name: Run Playwright tests c-essential
-        if: ${{ inputs.essentials }}
-        run: npm run e2e -- --grep @c-essential
+        if: ${{ inputs.all }}
+        run: npm run e2e
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
