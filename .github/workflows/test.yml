@@ -12,7 +12,7 @@ jobs:
     permissions: write-all
     steps:
       - name: Status block
-        run: gh api --method POST -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
+        run: gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
         env:
           GH_TOKEN: ${{ github.token }}
   build:
