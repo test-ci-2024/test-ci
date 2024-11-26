@@ -85,10 +85,16 @@ jobs:
     permissions: write-all
     needs: build
     if: ${{ always() && !cancelled() }}
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Status unlock
+      - name: Status failure
+        if: ${{ needs.build.result == 'failure' }}
         run: |
-          echo "Status: ${{ env.TEST_STATUS}}"
-          gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state=$TEST_STATUS -f context='e2e' -f description='Tests end'
-        env:
-          GH_TOKEN: ${{ github.token }}
+          gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='failure' -f context='e2e' -f description='Tests end'
+      
+      - name: Status Success
+        if: ${{ needs.build.result == 'success' }}
+        run: |
+          gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='success' -f context='e2e' -f description='Tests end'
+        
