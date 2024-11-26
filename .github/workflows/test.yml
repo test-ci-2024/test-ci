@@ -28,16 +28,19 @@ jobs:
         run: npm install
 
       # Install Playwright browsers
-      - name: Install Playwright browsers
-        run: |
-          npx playwright install --with-deps
-          # ls ~/.cache/ms-playwright/webkit-2083/
+      # - name: Install Playwright browsers
+      #   run: |
+      #     npx playwright install --with-deps
+      #     # ls ~/.cache/ms-playwright/webkit-2083/
 
       # Wait for previous job to finish
       - name: Turnstyle
         uses: softprops/turnstyle@v2
         with:
           same-branch-only: false
+
+      - name: Status block
+        run: gh api repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
 
       # Run e2e test
       - name: Run Playwright tests
@@ -62,3 +65,6 @@ jobs:
         with:
           name: report-${{ github.sha }}
           path: ./e2e/temp/test-report
+
+      - name: Status unlock
+        run: gh api repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='success' -f context='e2e' -f description='Test end'
