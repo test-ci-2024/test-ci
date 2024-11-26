@@ -5,8 +5,6 @@ on:
       essentials:
         descriptcion: 'test @c-essential'
         type: boolean
-env:
-  TEST_STATUS: "success"
 
 jobs:
   initial:
@@ -77,6 +75,10 @@ jobs:
       - name: Fail status
         if: ${{ failure() }}
         run: echo "TEST_STATUS=failure" >> $GITHUB_ENV
+
+      - name: Success status
+        if: ${{ !failure() }}
+        run: echo "TEST_STATUS=success" >> $GITHUB_ENV
 
   end:
     runs-on: ubuntu-latest
