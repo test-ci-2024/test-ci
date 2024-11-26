@@ -3,8 +3,22 @@ on:
   workflow_dispatch:
     inputs:
       essentials:
-        description: 'test @c-essential'
+        description: 'run test @c-essential'
         type: boolean
+      auth:
+        description: 'run test auth'
+        type: boolean
+      browser:
+        description: 'run test browser'
+        type: boolean
+      flaky:
+        description: 'run test flaky'
+        type: boolean
+      all:
+        description: 'run all test'
+        type: boolean
+      
+    
 
 jobs:
   initial:
@@ -50,8 +64,9 @@ jobs:
 
       # Run e2e test
       - name: Run Playwright tests
+        uses: joao-zanutto/get-selected@v1.1.1
         if: ${{ !inputs.essentials }}
-        run: npm run e2e -- --grep flaky
+        run: npm run e2e -- ${{ steps.get-selected-step.outputs.selected }}
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
