@@ -5,7 +5,9 @@ on:
       essentials:
         descriptcion: 'test @c-essential'
         type: boolean
-      
+env:
+  TEST_STATUS: "success"
+
 jobs:
   initial:
     runs-on: ubuntu-latest
@@ -72,12 +74,16 @@ jobs:
           name: report-${{ github.sha }}
           path: ./e2e/temp/test-report
 
+      - name: Fail status
+        if: ${{ failure() }}
+        run: echo "TEST_STATUS=failure" >> $GITHUB_ENV
+
   end:
     runs-on: ubuntu-latest
     permissions: write-all
     needs: build
     steps:
       - name: Status unlock
-        run: gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='success' -f context='e2e' -f description='Tests end'
+        run: gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='${{ env.TEST_STATUS }}' -f context='e2e' -f description='Tests end'
         env:
           GH_TOKEN: ${{ github.token }}

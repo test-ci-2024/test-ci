@@ -8,7 +8,7 @@ test('flaky test', async ({ page }, testInfo) => {
 
   let name = 'fake title'
   if(testInfo.retry){
-    name = 'Hello 1, test-ci'
+    // name = 'Hello 1, test-ci'
   }
   console.log("name:", name)
   // Expects page to have a heading with the name of Installation.
