@@ -16,6 +16,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
   build:
     name: playwright
+    needs: initial
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.46.0-noble
