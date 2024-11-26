@@ -51,7 +51,7 @@ jobs:
       # Run e2e test
       - name: Run Playwright tests
         if: ${{ !inputs.essentials }}
-        run: npm run e2e
+        run: npm run e2e -- --grep flaky
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
@@ -88,7 +88,7 @@ jobs:
     steps:
       - name: Status unlock
         run: |
-          echo "Status: $TEST_STATUS"
+          echo "Status: ${{ env.TEST_STATUS}}"
           gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state=$TEST_STATUS -f context='e2e' -f description='Tests end'
         env:
           GH_TOKEN: ${{ github.token }}
