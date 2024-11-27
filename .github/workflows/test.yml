@@ -33,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Echo PR
-        run: echo ${{ github.refs }}
+        run: echo ${{ github.ref }}
       - name: Comment PR
         uses: actions/github-script@v6
         with:
