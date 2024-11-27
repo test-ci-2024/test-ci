@@ -34,7 +34,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: Echo PR
         run: |
-          gh pr list -B ${{ github.ref }}
+          gh pr list
         env:
           GH_TOKEN: ${{ github.token }}          
       - name: Comment PR
