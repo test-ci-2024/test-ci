@@ -128,6 +128,7 @@ jobs:
         if: ${{ needs.build.result == 'failure' }}
         run: |
           gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='failure' -f context='e2e' -f description='Tests end'
+          echo ${{ needs.initial.outpunts }}
       - name: Comment PR on failure
         if: ${{ needs.build.result == 'failure' }}
         uses: actions/github-script@v6
