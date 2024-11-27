@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Echo PR
         run: |
-          gh pr list --head ${{ github.ref_name }} | grep -oP '^\d'
+          gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+'
         env:
           GH_TOKEN: ${{ github.token }}          
       - name: Comment PR
