@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Echo PR
         run: |
-          gh pr list
+          gh pr list | grep test3
         env:
           GH_TOKEN: ${{ github.token }}          
       - name: Comment PR
