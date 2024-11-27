@@ -97,7 +97,8 @@ jobs:
 
       - name: Fail status
         if: ${{ failure() }}
-        run: echo "TEST_STATUS=failure" >> "$GITHUB_ENV"
+        run: |
+          echo "TEST_STATUS=failure" >> "$GITHUB_ENV"
 
       - name: Success status
         if: ${{ !failure() }}
