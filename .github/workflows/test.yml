@@ -90,6 +90,7 @@ jobs:
       # Upload test report on failure
       - name: Upload report on failure
         uses: actions/upload-artifact@v4
+        id: artifact-upload-step
         if: ${{ failure() }}
         with:
           name: report-${{ github.sha }}
@@ -99,10 +100,12 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "TEST_STATUS=failure" >> "$GITHUB_ENV"
+          echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
 
-      - name: Success status
-        if: ${{ !failure() }}
-        run: echo "TEST_STATUS=success" >> "$GITHUB_ENV"
+
+      # - name: Success status
+      #   if: ${{ !failure() }}
+      #   run: echo "TEST_STATUS=success" >> "$GITHUB_ENV"
 
   end:
     runs-on: ubuntu-latest
