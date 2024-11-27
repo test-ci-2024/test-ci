@@ -119,7 +119,7 @@ jobs:
   end:
     runs-on: ubuntu-latest
     permissions: write-all
-    needs: build
+    needs: [build, initial]
     if: ${{ always() && !cancelled() }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -139,7 +139,7 @@ jobs:
             const body = `${name}: Test(s) failed\nArtifact [download](${url})`;
 
             await github.rest.issues.createComment({
-              issue_number: ${{ jobs.initial.outputs.pr_number }},
+              issue_number: ${{ needs.initial.outputs.pr_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
