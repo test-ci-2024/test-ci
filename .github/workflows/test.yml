@@ -35,8 +35,10 @@ jobs:
       - name: checkout to repo
         uses: actions/checkout@v4
       - name: Echo PR
+        id: get_pr_number
         run: |
-          gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+'
+          echo "pr_number=$(gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+')" >> $GITHUB_OUTPUT
+          # gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+'
         env:
           GH_TOKEN: ${{ github.token }}          
       - name: Comment PR
@@ -49,7 +51,7 @@ jobs:
             const body = `${name}: Comment PR\n${url}`;
 
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: ${{ steps.get_pr_number.outputs.pr_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
