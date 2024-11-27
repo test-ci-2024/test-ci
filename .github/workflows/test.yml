@@ -32,6 +32,20 @@ jobs:
         run: gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Comment PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const name = '${{ github.workflow   }}';
+            const url = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const body = `${name}: Comment PR\n${url}`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
   build:
     name: playwright
     needs: initial
