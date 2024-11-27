@@ -47,6 +47,8 @@ jobs:
     name: playwright
     needs: initial
     runs-on: ubuntu-latest
+    outputs:
+      artifact_url: ${{ steps.artifact_url_generation.outputs.artifact_url }}
     container:
       image: mcr.microsoft.com/playwright:v1.46.0-noble
     steps:
@@ -108,6 +110,7 @@ jobs:
           path: ./e2e/temp/test-report
 
       - name: Fail status
+        id: artifact_url_generation
         if: ${{ failure() }}
         run: |
           echo "artifact_url=${{ steps.artifact-upload-step.outputs.artifact-url }}" >> $GITHUB_OUTPUT
@@ -138,7 +141,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const name = '${{ github.workflow   }}';
-            const url = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const url = '${{ needs.build.outputs.artifact_url }}';
             const body = `${name}: Test(s) failed\nArtifact [download](${url})`;
 
             await github.rest.issues.createComment({
