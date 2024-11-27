@@ -34,8 +34,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: Echo PR
         run: |
-          echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "Branch name: ${{ env.BRANCH }}"
+          gh pr list -B ${{ github.ref_name }}
       - name: Comment PR
         uses: actions/github-script@v6
         with:
