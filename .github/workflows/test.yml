@@ -37,7 +37,7 @@ jobs:
       - name: Echo PR
         id: get_pr_number
         run: |
-          echo "pr_number=$(gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+')" >> $GITHUB_ENV
+          echo "pr_number=$(gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+')" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}          
       
@@ -108,7 +108,7 @@ jobs:
       - name: Fail status
         if: ${{ failure() }}
         run: |
-          echo "artifact_url=${{ steps.artifact-upload-step.outputs.artifact-url }}" >> $GITHUB_ENV
+          echo "artifact_url=${{ steps.artifact-upload-step.outputs.artifact-url }}" >> $GITHUB_OUTPUT
           echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
 
 
@@ -139,7 +139,7 @@ jobs:
             const body = `${name}: Test(s) failed\nArtifact [download](${url})`;
 
             await github.rest.issues.createComment({
-              issue_number: ${{ env.pr_number }},
+              issue_number: ${{ jobs.initial.outputs.pr_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
