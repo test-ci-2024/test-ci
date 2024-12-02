@@ -8,7 +8,7 @@ test('flaky test', {
 
   console.log("CI:", testEnv.ci);
 
-  let name = 'fake title'
+  let name = 'fake titlee'
   if(testInfo.retry){
     name = 'Hello 1, test-ci'
   }
