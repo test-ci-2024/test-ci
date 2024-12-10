@@ -99,7 +99,7 @@ jobs:
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
-          FORNTEND_TEST_API_KEY: ${{ secrets.FORNTEND_TEST_API_KEY }}
+          FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
 
       # Upload test report on failure
       - name: Upload report on failure

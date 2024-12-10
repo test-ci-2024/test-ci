@@ -1,5 +1,5 @@
 export default async function globalSetup() {
-    console.log({ environment: `${process.env.FORNTEND_TEST_API_KEY}` });
+    console.log({ environment: `${process.env.FRONTEND_TEST_API_KEY}` });
     const userEmails:string[] = ["josias.rojas@haulmer.com"];
     // Reset workspaces
     fetch("https://api.haulmer.dev/v2/workspace/testing/reset-to-default", {
@@ -9,7 +9,7 @@ export default async function globalSetup() {
         },
         body: JSON.stringify({
             userEmails,
-            apikey: process.env.FORNTEND_TEST_API_KEY
+            apikey: process.env.FRONTEND_TEST_API_KEY
         })
     })
         .then(response => {
