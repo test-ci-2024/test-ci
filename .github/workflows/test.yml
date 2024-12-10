@@ -91,6 +91,7 @@ jobs:
         env:
           ENV: "PROD"
           DEBUG: "pw:api"
+          FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
 
       # Run e2e test
       - name: Run Playwright tests c-essential
