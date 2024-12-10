@@ -1,17 +1,60 @@
-name: testing
+name: testing e2e
 on:
   workflow_dispatch:
     inputs:
       essentials:
-        descriptcion: 'test @c-essential'
+        description: 'run test @c-essential'
         type: boolean
-      
+      auth:
+        description: 'run test auth'
+        type: boolean
+      browser:
+        description: 'run test browser'
+        type: boolean
+      flaky:
+        description: 'run test flaky'
+        type: boolean
+      fail:
+        description: 'run test fail'
+        type: boolean
+      all:
+        description: 'run all test'
+        type: boolean
+
+
+
 jobs:
+  initial:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    outputs:
+      pr_number: ${{ steps.get_pr_number.outputs.pr_number }}
+    steps:
+      - name: Status block
+        run: gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='pending' -f context='e2e' -f description='Running tests'
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: checkout to repo
+        uses: actions/checkout@v4
+      - name: Echo PR
+        id: get_pr_number
+        run: |
+          echo "pr_number=$(gh pr list --head ${{ github.ref_name }} | grep -oP '^\d+')" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   build:
     name: playwright
+    needs: initial
     runs-on: ubuntu-latest
+    outputs:
+      artifact_url: ${{ steps.artifact_url_generation.outputs.artifact_url }}
     container:
-      image: mcr.microsoft.com/playwright:v1.46.0-noble
+      image: mcr.microsoft.com/playwright:v1.49.0-noble
+    env:
+      ENV: "PROD"
+      DEBUG: "pw:api"
+      FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -28,10 +71,10 @@ jobs:
         run: npm install
 
       # Install Playwright browsers
-      - name: Install Playwright browsers
-        run: |
-          npx playwright install --with-deps
-          # ls ~/.cache/ms-playwright/webkit-2083/
+      # - name: Install Playwright browsers
+      #   run: |
+      #     npx playwright install --with-deps
+      #     # ls ~/.cache/ms-playwright/webkit-2083/
 
       # Wait for previous job to finish
       - name: Turnstyle
@@ -39,26 +82,75 @@ jobs:
         with:
           same-branch-only: false
 
+      # Get selected inputs
+      - id: get-selected-step
+        uses: joao-zanutto/get-selected@v1.1.1
+        with:
+          separator: "|"
+
       # Run e2e test
       - name: Run Playwright tests
-        if: ${{ !inputs.essentials }}
-        run: npm run e2e
-        env:
-          ENV: "PROD"
-          DEBUG: "pw:api"
-      
+        if: ${{ !inputs.all }}
+        run: npm run e2e -- --grep "${{ steps.get-selected-step.outputs.selected }}"
+
       # Run e2e test
       - name: Run Playwright tests c-essential
-        if: ${{ inputs.essentials }}
-        run: npm run e2e -- --grep @c-essential
-        env:
-          ENV: "PROD"
-          DEBUG: "pw:api"
-      
+        if: ${{ inputs.all }}
+        run: npm run e2e
+
+
       # Upload test report on failure
       - name: Upload report on failure
         uses: actions/upload-artifact@v4
+        id: artifact-upload-step
         if: ${{ failure() }}
         with:
           name: report-${{ github.sha }}
           path: ./e2e/temp/test-report
+
+      - name: Fail status
+        id: artifact_url_generation
+        if: ${{ failure() }}
+        run: |
+          echo "artifact_url=${{ steps.artifact-upload-step.outputs.artifact-url }}" >> $GITHUB_OUTPUT
+          echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
+
+
+      # - name: Success status
+      #   if: ${{ !failure() }}
+      #   run: echo "TEST_STATUS=success" >> "$GITHUB_ENV"
+
+  end:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: [build, initial]
+    if: ${{ always() && !cancelled() }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Status failure
+        if: ${{ needs.build.result == 'failure' }}
+        run: |
+          gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='failure' -f context='e2e' -f description='Tests end'
+          echo ${{ needs.initial.outpunts }}
+      - name: Comment PR on failure
+        if: ${{ needs.build.result == 'failure' }}
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const name = '${{ github.workflow   }}';
+            const url = '${{ needs.build.outputs.artifact_url }}';
+            const body = `${name}: Test(s) failed\nArtifact [download](${url})`;
+
+            await github.rest.issues.createComment({
+              issue_number: ${{ needs.initial.outputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
+      - name: Status Success
+        if: ${{ needs.build.result == 'success' }}
+        run: |
+          gh api --method POST -H "Accept':' application/vnd.github+json" -H "X-GitHub-Api-Version':' 2022-11-28" repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/statuses/${{ github.sha }} -f state='success' -f context='e2e' -f description='Tests end'
+

@@ -74,6 +74,8 @@ export default defineConfig({
     // },
   ],
 
+  globalSetup: require.resolve('./e2e/setups/global.setup'),
+
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm run start',
