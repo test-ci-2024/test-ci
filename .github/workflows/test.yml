@@ -51,6 +51,10 @@ jobs:
       artifact_url: ${{ steps.artifact_url_generation.outputs.artifact_url }}
     container:
       image: mcr.microsoft.com/playwright:v1.49.0-noble
+    env:
+      ENV: "PROD"
+      DEBUG: "pw:api"
+      FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -88,19 +92,12 @@ jobs:
       - name: Run Playwright tests
         if: ${{ !inputs.all }}
         run: npm run e2e -- --grep "${{ steps.get-selected-step.outputs.selected }}"
-        env:
-          ENV: "PROD"
-          DEBUG: "pw:api"
-          FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
 
       # Run e2e test
       - name: Run Playwright tests c-essential
         if: ${{ inputs.all }}
         run: npm run e2e
-        env:
-          ENV: "PROD"
-          DEBUG: "pw:api"
-          FRONTEND_TEST_API_KEY: ${{ secrets.FRONTEND_TEST_API_KEY }}
+
 
       # Upload test report on failure
       - name: Upload report on failure
